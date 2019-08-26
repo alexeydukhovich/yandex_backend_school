@@ -1,0 +1,10 @@
+flask-migrate
+flask-rest-api==0.11.2
+flask-script
+flask-sqlalchemy
+marshmallow==3.0.0rc6
+marshmallow-sqlalchemy
+marshmallow-enum==1.4.1
+psycopg2
+requests
+numpy
