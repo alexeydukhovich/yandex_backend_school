@@ -127,17 +127,36 @@ class CitizenGetSchema(ModelSchema):
     as_left_edges = fields.Nested("RelativeSchema", many=True, required=True)
     as_right_edges = fields.Nested("RelativeSchema", many=True, required=True)
 
-    @post_dump
-    def handle_relatives(self, data):
-        as_left_edges = data.pop("as_left_edges")
-        as_right_edges = data.pop("as_right_edges")
-        relatives = []
-        for edge in as_left_edges:
-            relatives.append(edge["right_id"])#["right_citizen"]["citizen_id"])
-        for edge in as_right_edges:
-            relatives.append(edge["left_id"])#["left_citizen"]["citizen_id"])
-        data["relatives"] = relatives
-        return data
+    @post_dump(pass_many=True)
+    def handle_relatives(self, collection, many):
+        if many:
+            for data in collection:
+                as_left_edges = data.pop("as_left_edges")
+                as_right_edges = data.pop("as_right_edges")
+                relatives = []
+                for edge in as_left_edges:
+                    relatives.append(edge["right_id"])#["right_citizen"]["citizen_id"])
+                for edge in as_right_edges:
+                    relatives.append(edge["left_id"])#["left_citizen"]["citizen_id"])
+                data["relatives"] = relatives
+            return {
+                "data": collection
+            }
+        else:
+            data = collection
+            as_left_edges = data.pop("as_left_edges")
+            as_right_edges = data.pop("as_right_edges")
+            relatives = []
+            for edge in as_left_edges:
+                relatives.append(edge["right_id"])#["right_citizen"]["citizen_id"])
+            for edge in as_right_edges:
+                relatives.append(edge["left_id"])#["left_citizen"]["citizen_id"])
+            data["relatives"] = relatives
+            return {
+                "data": data
+            }
+
+        
 
 
 @api.definition("CitizenPatchSchema")
