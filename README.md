@@ -23,6 +23,7 @@ flask db upgrade
 Из корневой папки проекта:
 
 ```shell
+export FLASK_APP=manage.py
 flask run --host=0.0.0.0 --port=8080
 ```
 
